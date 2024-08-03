@@ -1,0 +1,67 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="left col-md-6 col-lg-6 col-sm-6">
+        <h3>Login</h3>
+        <hr />
+        <form method="post" asp-page-handler="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Author.Email" class="control-label"></label>
+                <input asp-for="Author.Email" class="form-control" />
+                <span asp-validation-for="Author.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author.Password" class="control-label"></label>
+                <input asp-for="Author.Password" class="form-control" />
+                <span asp-validation-for="Author.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="left col-md-6 col-lg-6 col-sm-6">
+        <h3>Registration</h3>
+        <hr />
+        <form method="post" asp-page-handler="Register" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Author.Name" class="control-label"></label>
+                <input asp-for="Author.Name" class="form-control" />
+                <span asp-validation-for="Author.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author.Email" class="control-label"></label>
+                <input asp-for="Author.Email" class="form-control" />
+                <span asp-validation-for="Author.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author.Password" class="control-label"></label>
+                <input asp-for="Author.Password" class="form-control" />
+                <span asp-validation-for="Author.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author.Avatar" class="control-label"></label>
+                <input type="file" name="Avatar" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Register" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div> 
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

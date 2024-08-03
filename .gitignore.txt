@@ -1,0 +1,6 @@
+images/
+Migrations/
+Properties/
+wwwroot/images/
+wwwroot/lib/
+appsettings*.json

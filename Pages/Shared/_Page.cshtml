@@ -1,0 +1,12 @@
+﻿@model List<string>
+<div class="row col-sm-4 col-lg-4">
+    <h2>Partial page</h2>
+    <hr />
+    <p>Choose a country</p>
+    <select>
+        @foreach (string item in Model)
+        {
+            <option>@item</option>
+        }
+    </select>
+</div>

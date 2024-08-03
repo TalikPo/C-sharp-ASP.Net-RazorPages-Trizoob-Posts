@@ -1,0 +1,109 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@using Trizoob.Models
+@inject IHttpContextAccessor Accessor
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<div class="row">
+    <div class="pub_left col-md-3 col-lg-3 col-sm-4">
+        
+        <select name="authorId" class="form-control">
+            @foreach (var item in Model.AuthorsList)
+            {
+                if (item.Id == Accessor.HttpContext.Session.GetInt32("selectedAuthor"))
+                {
+                    <option value="@item.Id" selected>@item.Name</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+        <br />
+        @{
+            int? aId = Accessor.HttpContext.Session.GetInt32("LoggedId");
+            if (aId != null)
+            {
+                string imgb64 = Model.AuthorsList.Where(a => a.Id == aId).FirstOrDefault().Avatar;
+                if (!string.IsNullOrEmpty(imgb64))
+                {
+                    <img src="data:image/jpg;base64, @imgb64" alt="Picture" width="300" />
+                }
+            }
+        }
+    </div>
+    <div class="pub_right col-md-9 col-lg-9 col-sm-8">
+        <form method="post" enctype="multipart/form-data" style="width:100%;">
+            <div class="form-group">
+                <div class="form-group" style="">
+                    <input type="text" name="Publication.Header" class="" placeholder="Title" style="width:30vw;" />
+                    <input type="number" name="Publication.IsPublic" class="" style="width:50px; float:right;" />
+                    <span style="float:right; margin-right:10px;">View to everyone</span>
+                </div>
+                <textarea class="form-control" name="Publication.Description" placeholder="Description" style="width:100%; margin-top: 10px;"></textarea>
+                <input type="file" name="DataUrl" class="" style="margin-top: 10px;" />
+                <input type="submit" name="Submit" class="btn btn-secondary" value="Publish" style="float: right; margin-top:10px;" />
+            </div>
+        </form>
+        <div class="pub-container" style="background-color:mistyrose; border-radius:3px; margin-top: 30px;">
+            @foreach (Publication item in Model.Publications)
+            { 
+                <partial name="~/Pages/Shared/_Item.cshtml" model="@item"/>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('select').eq(0).change(function (event) {
+            $.ajax({
+                url: "/Index?handler=Select",
+                method: "GET",
+                data: { 'authorid': event.target.value },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        });
+        $('.blike').click(function(event){
+            let attribute = $(this).attr('id');
+            let publicationId = attribute.split('_')[1];
+            let clickedButton = $(this);
+            $.ajax({
+                url: "/Index?handler=Likes",
+                method: "GET",
+                type: 'json',
+                data: { 'pubid': publicationId },
+                success: function (data) {
+                    if (data == "Only signed users can react."){
+                        alert(data);
+                        return;
+                    }
+                    clickedButton.text(data);
+                }
+            });
+        });
+        $('.bdislike').click(function(event){
+            let attribute = $(this).attr('id');
+            let publicationId = attribute.split('_')[1];
+            let clickedButton = $(this);
+            $.ajax({
+                url: "/Index?handler=Dislikes",
+                method: "GET",
+                type: 'json',
+                data: { 'pubid': publicationId },
+                success: function (data) {
+                    if (data == "Only signed users can react.") {
+                        alert(data);
+                        return;
+                    }
+                    clickedButton.text(data);
+                }
+            });
+        });
+    });
+</script>
